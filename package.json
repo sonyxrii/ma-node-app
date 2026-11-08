@@ -1,0 +1,10 @@
+{
+  "name": "ma_node_app",
+  "version": "1.0.0",
+  "description": "Project for CI",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "dependencies": {}
+}
