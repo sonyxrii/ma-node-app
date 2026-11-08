@@ -1,0 +1,34 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Завантажити код репозиторію
+        uses: actions/checkout@v4
+
+      - name: Установити Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Установити залежності 
+        run: npm install
+
+      - name: Запустити білд-процес 
+        run: npm run build
+
+      - name: Зберегти результат як артефакт
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-build-artifact
+          path: index.js
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-build-artifact
+          path: index.js
