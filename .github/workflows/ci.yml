@@ -28,7 +28,3 @@ jobs:
         with:
           name: my-build-artifact
           path: index.js
-        uses: actions/upload-artifact@v4
-        with:
-          name: my-build-artifact
-          path: index.js
