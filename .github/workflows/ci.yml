@@ -1,0 +1,49 @@
+name: Node.js CI/CD to EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Завантажити код репозиторію
+        uses: actions/checkout@v4
+
+      - name: Установити Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Установити залежності
+        run: npm install
+
+      - name: Запустити білд-процес
+        run: npm run build
+
+      - name: Підготовка SSH-ключа
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ec2-key.pem
+          chmod 600 ec2-key.pem
+
+      - name: Копіювання проєкту на EC2 сервер
+        run: |
+          rsync -avz -o StrictHostKeyChecking=no -e "ssh -i ec2-key.pem" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/aws-node-app
+
+      - name: Запуск застосунку на EC2 через PM2
+        run: |
+          ssh -i ec2-key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            export PATH=$PATH:/home/ubuntu/.nvm
+            if ! command -v node &> /dev/null; then
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+            fi
+            if ! command -v pm2 &> /dev/null; then
+                sudo npm install -g pm2
+            fi
+            cd /home/ubuntu/aws-node-app
+            npm install
+            pm2 restart all || pm2 start index.js --name "aws-node-app"
+          EOF

@@ -1,0 +1,10 @@
+{
+  "name": "aws-node-app",
+  "version": "1.0.0",
+  "description": "Node.js app for AWS EC2 deployment",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "dependencies": {}
+}
