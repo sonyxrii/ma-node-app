@@ -36,20 +36,22 @@ jobs:
         run: |
           rsync -avz -e "ssh -i ec2-key.pem -o StrictHostKeyChecking=no" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/aws-node-app
 
-      - name: Запуск застосунку на EC2 через PM2
+      - name: Встановити Node.js та PM2 на сервері
         run: |
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/aws-node-app
-
             if ! command -v node &> /dev/null; then
                 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
                 sudo apt-get install -y nodejs
             fi
-
             if ! command -v pm2 &> /dev/null; then
                 sudo npm install -g pm2
             fi
+          EOF
 
+      - name: Запуск застосунку через PM2
+        run: |
+          ssh -i ec2-key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /home/ubuntu/aws-node-app
             npm install
             pm2 restart aws-node-app || pm2 start index.js --name "aws-node-app"
           EOF
