@@ -1,5 +1,12 @@
-<<<<<<< HEAD
-console.log("Hello AWS CI/CD");
-=======
-console.log("Hello world");
->>>>>>> 521ef975ac630216bea0b6f24a04be4e6ba84cbd
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World!\n');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
