@@ -1,10 +1,20 @@
 {
+<<<<<<< HEAD
   "name": "aws-node-app",
   "version": "1.0.0",
   "description": "Node.js app for AWS EC2 deployment",
+=======
+  "name": "ma_node_app",
+  "version": "1.0.0",
+  "description": "Project for CI",
+>>>>>>> 521ef975ac630216bea0b6f24a04be4e6ba84cbd
   "main": "index.js",
   "scripts": {
     "build": "node index.js"
   },
   "dependencies": {}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 521ef975ac630216bea0b6f24a04be4e6ba84cbd
